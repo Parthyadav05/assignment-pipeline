@@ -52,6 +52,29 @@ export class ContactService {
   }
 
   async saveContactsWithTransaction(result: ProcessingResult): Promise<void> {
+    const isReplicaSet = await this.checkReplicaSetSupport();
+
+    if (isReplicaSet) {
+      await this.saveWithTransactions(result);
+    } else {
+      Logger.warn('MongoDB replica set not detected. Using atomic operations without transactions.');
+      await this.saveWithAtomicOperations(result);
+    }
+  }
+
+  private async checkReplicaSetSupport(): Promise<boolean> {
+    try {
+      const admin = mongoose.connection.db?.admin();
+      if (!admin) return false;
+
+      const status = await admin.serverStatus();
+      return status.repl !== undefined;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  private async saveWithTransactions(result: ProcessingResult): Promise<void> {
     const session = await mongoose.startSession();
 
     try {
@@ -96,6 +119,48 @@ export class ContactService {
       throw error;
     } finally {
       await session.endSession();
+    }
+  }
+
+  private async saveWithAtomicOperations(result: ProcessingResult): Promise<void> {
+    try {
+      if (result.valid.length > 0) {
+        const contactDocs = result.valid.map((phoneNumber) => ({
+          phoneNumber,
+        }));
+        await Contact.insertMany(contactDocs, { ordered: false });
+
+        const validLogs = result.valid.map((phoneNumber) => ({
+          phoneNumber,
+          status: 'valid' as const,
+        }));
+        await ProcessingLog.insertMany(validLogs, { ordered: false });
+      }
+
+      if (result.invalid.length > 0) {
+        const invalidLogs = result.invalid.map((phoneNumber) => ({
+          phoneNumber,
+          status: 'invalid' as const,
+        }));
+        await ProcessingLog.insertMany(invalidLogs, { ordered: false });
+      }
+
+      if (result.duplicates.length > 0) {
+        const duplicateLogs = result.duplicates.map((phoneNumber) => ({
+          phoneNumber,
+          status: 'duplicate' as const,
+        }));
+        await ProcessingLog.insertMany(duplicateLogs, { ordered: false });
+      }
+
+      Logger.info('Atomic operations completed successfully', {
+        valid: result.valid.length,
+        invalid: result.invalid.length,
+        duplicates: result.duplicates.length,
+      });
+    } catch (error) {
+      Logger.error('Atomic operations failed', error);
+      throw error;
     }
   }
 

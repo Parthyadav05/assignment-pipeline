@@ -64,6 +64,43 @@ assignment/
 - MongoDB (v6 or higher)
 - npm or yarn
 
+## Quick Start (Run Both Backend & Frontend)
+
+### Automated Setup:
+
+**Windows:**
+```bash
+setup.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+### Start Application:
+
+**Windows:**
+```bash
+start.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+Or use npm:
+```bash
+npm run dev
+```
+
+This will start both backend (port 5000) and frontend (port 3000) simultaneously.
+
+**Access the application:** http://localhost:3000
+
 ## Setup Instructions
 
 ### 1. Clone the Repository
@@ -82,6 +119,8 @@ mongod
 ```
 
 The default connection string is `mongodb://localhost:27017/contacts-pipeline`
+
+**For detailed database setup instructions (local or cloud), see [DATABASE_SETUP.md](DATABASE_SETUP.md)**
 
 ### 3. Backend Setup
 
