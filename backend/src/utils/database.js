@@ -55,6 +55,25 @@ const createTables = async () => {
       CREATE INDEX IF NOT EXISTS idx_status ON processing_logs(status);
     `);
 
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS idempotency_keys (
+        id SERIAL PRIMARY KEY,
+        request_id VARCHAR(255) UNIQUE NOT NULL,
+        response_body JSONB NOT NULL,
+        response_status INTEGER NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        expires_at TIMESTAMP NOT NULL
+      );
+    `);
+
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_request_id ON idempotency_keys(request_id);
+    `);
+
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_expires_at ON idempotency_keys(expires_at);
+    `);
+
     Logger.info('Database tables created/verified successfully');
   } catch (error) {
     Logger.error('Error creating tables:', error);

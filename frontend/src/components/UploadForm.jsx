@@ -62,6 +62,12 @@ export default function UploadForm({ onUploadComplete }) {
       {result && (
         <div style={styles.result}>
           <h3 style={styles.resultTitle}>Upload Results</h3>
+          {result.idempotencyKey && (
+            <div style={styles.idempotencyInfo}>
+              <span style={styles.idempotencyLabel}>Request ID:</span>
+              <code style={styles.idempotencyKey}>{result.idempotencyKey}</code>
+            </div>
+          )}
           <div style={styles.statsGrid}>
             <div style={styles.statItem}>
               <span style={styles.statLabel}>TOTAL</span>
@@ -170,5 +176,28 @@ const styles = {
     fontSize: '32px',
     fontWeight: '300',
     color: '#000000',
+  },
+  idempotencyInfo: {
+    marginBottom: '16px',
+    padding: '12px',
+    backgroundColor: '#f5f5f5',
+    border: '1px solid #e0e0e0',
+    fontSize: '11px',
+  },
+  idempotencyLabel: {
+    fontWeight: '600',
+    marginRight: '8px',
+    color: '#666666',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+  },
+  idempotencyKey: {
+    fontFamily: 'monospace',
+    fontSize: '11px',
+    color: '#000000',
+    backgroundColor: '#ffffff',
+    padding: '4px 8px',
+    border: '1px solid #cccccc',
+    wordBreak: 'break-all',
   },
 };

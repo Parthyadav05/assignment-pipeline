@@ -27,7 +27,24 @@ CREATE TABLE IF NOT EXISTS processing_logs (
 -- Create index on status for faster queries
 CREATE INDEX IF NOT EXISTS idx_status ON processing_logs(status);
 
+-- STEP 4: Create idempotency_keys table
+CREATE TABLE IF NOT EXISTS idempotency_keys (
+  id SERIAL PRIMARY KEY,
+  request_id VARCHAR(255) UNIQUE NOT NULL,
+  response_body JSONB NOT NULL,
+  response_status INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  expires_at TIMESTAMP NOT NULL
+);
+
+-- Create index on request_id for faster lookups
+CREATE INDEX IF NOT EXISTS idx_request_id ON idempotency_keys(request_id);
+
+-- Create index on expires_at for cleanup queries
+CREATE INDEX IF NOT EXISTS idx_expires_at ON idempotency_keys(expires_at);
+
 -- Verify setup
 SELECT 'Database setup complete!' as message;
 SELECT COUNT(*) as total_contacts FROM contacts;
 SELECT COUNT(*) as total_logs FROM processing_logs;
+SELECT COUNT(*) as total_idempotency_keys FROM idempotency_keys;
