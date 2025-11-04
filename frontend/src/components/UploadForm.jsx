@@ -1,20 +1,13 @@
-'use client';
-
 import { useState } from 'react';
-import { uploadContacts } from '@/lib/api';
-import { BulkUploadResponse } from '@/types';
+import { uploadContacts } from '../lib/api';
 
-interface UploadFormProps {
-  onUploadComplete: () => void;
-}
-
-export default function UploadForm({ onUploadComplete }: UploadFormProps) {
+export default function UploadForm({ onUploadComplete }) {
   const [phoneNumbers, setPhoneNumbers] = useState('');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<BulkUploadResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -51,12 +44,12 @@ export default function UploadForm({ onUploadComplete }: UploadFormProps) {
           value={phoneNumbers}
           onChange={(e) => setPhoneNumbers(e.target.value)}
           placeholder="Enter phone numbers (one per line)&#10;Example:&#10;+1234567890&#10;+9876543210&#10;1234567890"
-          rows={10}
+          rows={12}
           style={styles.textarea}
           disabled={loading}
         />
         <button type="submit" disabled={loading} style={styles.button}>
-          {loading ? 'Uploading...' : 'Upload Contacts'}
+          {loading ? 'PROCESSING...' : 'UPLOAD CONTACTS'}
         </button>
       </form>
 
@@ -71,26 +64,20 @@ export default function UploadForm({ onUploadComplete }: UploadFormProps) {
           <h3 style={styles.resultTitle}>Upload Results</h3>
           <div style={styles.statsGrid}>
             <div style={styles.statItem}>
-              <span style={styles.statLabel}>Total:</span>
+              <span style={styles.statLabel}>TOTAL</span>
               <span style={styles.statValue}>{result.stats.total}</span>
             </div>
             <div style={styles.statItem}>
-              <span style={{ ...styles.statLabel, color: '#10b981' }}>Valid:</span>
-              <span style={{ ...styles.statValue, color: '#10b981' }}>
-                {result.stats.valid}
-              </span>
+              <span style={styles.statLabel}>VALID</span>
+              <span style={styles.statValue}>{result.stats.valid}</span>
             </div>
             <div style={styles.statItem}>
-              <span style={{ ...styles.statLabel, color: '#ef4444' }}>Invalid:</span>
-              <span style={{ ...styles.statValue, color: '#ef4444' }}>
-                {result.stats.invalid}
-              </span>
+              <span style={styles.statLabel}>INVALID</span>
+              <span style={styles.statValue}>{result.stats.invalid}</span>
             </div>
             <div style={styles.statItem}>
-              <span style={{ ...styles.statLabel, color: '#f59e0b' }}>Duplicates:</span>
-              <span style={{ ...styles.statValue, color: '#f59e0b' }}>
-                {result.stats.duplicates}
-              </span>
+              <span style={styles.statLabel}>DUPLICATES</span>
+              <span style={styles.statValue}>{result.stats.duplicates}</span>
             </div>
           </div>
         </div>
@@ -102,77 +89,86 @@ export default function UploadForm({ onUploadComplete }: UploadFormProps) {
 const styles = {
   container: {
     backgroundColor: '#ffffff',
-    borderRadius: '8px',
-    padding: '24px',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    border: '2px solid #000000',
+    padding: '32px',
   },
   title: {
     fontSize: '24px',
-    fontWeight: '600',
-    marginBottom: '16px',
-    color: '#111827',
+    fontWeight: '300',
+    marginBottom: '24px',
+    color: '#000000',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
   },
   form: {
     display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '16px',
+    flexDirection: 'column',
+    gap: '24px',
   },
   textarea: {
     width: '100%',
-    padding: '12px',
+    padding: '16px',
     fontSize: '14px',
-    border: '1px solid #d1d5db',
-    borderRadius: '6px',
+    border: '1px solid #000000',
+    backgroundColor: '#ffffff',
+    color: '#000000',
     fontFamily: 'monospace',
-    resize: 'vertical' as const,
+    resize: 'vertical',
+    outline: 'none',
   },
   button: {
-    padding: '12px 24px',
-    backgroundColor: '#3b82f6',
+    padding: '16px 32px',
+    backgroundColor: '#000000',
     color: '#ffffff',
-    border: 'none',
-    borderRadius: '6px',
-    fontSize: '16px',
-    fontWeight: '500',
+    border: '2px solid #000000',
+    fontSize: '14px',
+    fontWeight: '600',
     cursor: 'pointer',
+    letterSpacing: '2px',
+    transition: 'all 0.3s ease',
   },
   error: {
-    marginTop: '16px',
-    padding: '12px',
-    backgroundColor: '#fee2e2',
-    borderRadius: '6px',
-    color: '#991b1b',
-  },
-  result: {
     marginTop: '24px',
     padding: '16px',
-    backgroundColor: '#f9fafb',
-    borderRadius: '6px',
+    backgroundColor: '#000000',
+    color: '#ffffff',
+    textAlign: 'center',
+  },
+  result: {
+    marginTop: '32px',
+    padding: '24px',
+    border: '1px solid #000000',
   },
   resultTitle: {
     fontSize: '18px',
     fontWeight: '600',
-    marginBottom: '12px',
-    color: '#111827',
+    marginBottom: '16px',
+    color: '#000000',
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
   },
   statsGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: '12px',
+    gap: '16px',
   },
   statItem: {
     display: 'flex',
-    justifyContent: 'space-between',
-    padding: '8px',
-    backgroundColor: '#ffffff',
-    borderRadius: '4px',
+    flexDirection: 'column',
+    padding: '16px',
+    border: '1px solid #000000',
+    textAlign: 'center',
   },
   statLabel: {
-    fontSize: '14px',
-    fontWeight: '500',
+    fontSize: '12px',
+    fontWeight: '600',
+    marginBottom: '8px',
+    letterSpacing: '1px',
+    color: '#666666',
   },
   statValue: {
-    fontSize: '14px',
-    fontWeight: '600',
+    fontSize: '32px',
+    fontWeight: '300',
+    color: '#000000',
   },
 };

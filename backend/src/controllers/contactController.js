@@ -1,14 +1,9 @@
-import { Request, Response } from 'express';
-import { ContactService } from '../services/contactService';
-import { BulkUploadRequest, BulkUploadResponse, StatsResponse } from '../types';
-import { Logger } from '../utils/logger';
+const { ContactService } = require('../services/contactService');
+const { Logger } = require('../utils/logger');
 
 const contactService = new ContactService();
 
-export const bulkUploadContacts = async (
-  req: Request<{}, {}, BulkUploadRequest>,
-  res: Response<BulkUploadResponse>
-): Promise<void> => {
+const bulkUploadContacts = async (req, res) => {
   try {
     const { phoneNumbers } = req.body;
 
@@ -75,10 +70,7 @@ export const bulkUploadContacts = async (
   }
 };
 
-export const getStats = async (
-  req: Request,
-  res: Response<StatsResponse>
-): Promise<void> => {
+const getStats = async (req, res) => {
   try {
     Logger.info('Fetching stats');
 
@@ -94,4 +86,9 @@ export const getStats = async (
       duplicateAttempts: 0,
     });
   }
+};
+
+module.exports = {
+  bulkUploadContacts,
+  getStats,
 };

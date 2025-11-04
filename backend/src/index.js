@@ -1,14 +1,14 @@
-import express, { Application } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { connectDatabase } from './utils/database';
-import contactRoutes from './routes/contactRoutes';
-import { errorHandler, notFoundHandler } from './middleware/errorHandler';
-import { Logger } from './utils/logger';
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const { connectDatabase } = require('./utils/database');
+const contactRoutes = require('./routes/contactRoutes');
+const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
+const { Logger } = require('./utils/logger');
 
 dotenv.config();
 
-const app: Application = express();
+const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());

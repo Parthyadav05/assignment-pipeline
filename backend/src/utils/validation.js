@@ -1,4 +1,4 @@
-export const validatePhoneNumber = (phoneNumber: string): boolean => {
+const validatePhoneNumber = (phoneNumber) => {
   const cleanedNumber = phoneNumber.trim();
 
   if (!cleanedNumber) {
@@ -10,6 +10,11 @@ export const validatePhoneNumber = (phoneNumber: string): boolean => {
   return phoneRegex.test(cleanedNumber);
 };
 
-export const normalizePhoneNumber = (phoneNumber: string): string => {
+const normalizePhoneNumber = (phoneNumber) => {
   return phoneNumber.trim().replace(/\s+/g, '');
+};
+
+module.exports = {
+  validatePhoneNumber,
+  normalizePhoneNumber,
 };

@@ -1,10 +1,8 @@
-'use client';
-
 import { useState } from 'react';
-import UploadForm from '@/components/UploadForm';
-import StatsDisplay from '@/components/StatsDisplay';
+import UploadForm from './components/UploadForm';
+import StatsDisplay from './components/StatsDisplay';
 
-export default function Home() {
+export default function App() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleUploadComplete = () => {
@@ -17,7 +15,7 @@ export default function Home() {
         <header style={styles.header}>
           <h1 style={styles.heading}>Contact Pipeline</h1>
           <p style={styles.subheading}>
-            Upload and manage phone numbers with validation and deduplication
+            Premium phone number management system with validation and deduplication
           </p>
         </header>
 
@@ -38,31 +36,37 @@ export default function Home() {
 const styles = {
   main: {
     minHeight: '100vh',
-    backgroundColor: '#f3f4f6',
-    padding: '24px',
+    backgroundColor: '#ffffff',
+    padding: '48px 24px',
   },
   container: {
-    maxWidth: '1200px',
+    maxWidth: '1400px',
     margin: '0 auto',
   },
   header: {
-    textAlign: 'center' as const,
-    marginBottom: '32px',
+    textAlign: 'center',
+    marginBottom: '64px',
+    paddingBottom: '32px',
+    borderBottom: '2px solid #000000',
   },
   heading: {
-    fontSize: '36px',
-    fontWeight: '700',
-    color: '#111827',
-    marginBottom: '8px',
+    fontSize: '48px',
+    fontWeight: '300',
+    color: '#000000',
+    marginBottom: '16px',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
   },
   subheading: {
     fontSize: '16px',
-    color: '#6b7280',
+    color: '#666666',
+    fontWeight: '300',
+    letterSpacing: '1px',
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))',
-    gap: '24px',
+    gap: '48px',
   },
   section: {
     minWidth: '0',

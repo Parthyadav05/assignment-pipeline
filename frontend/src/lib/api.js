@@ -1,8 +1,6 @@
-import { BulkUploadResponse, StatsResponse } from '@/types';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-
-export const uploadContacts = async (phoneNumbers: string[]): Promise<BulkUploadResponse> => {
+export const uploadContacts = async (phoneNumbers) => {
   const response = await fetch(`${API_URL}/contacts/bulk`, {
     method: 'POST',
     headers: {
@@ -18,7 +16,7 @@ export const uploadContacts = async (phoneNumbers: string[]): Promise<BulkUpload
   return response.json();
 };
 
-export const getStats = async (): Promise<StatsResponse> => {
+export const getStats = async () => {
   const response = await fetch(`${API_URL}/contacts/stats`);
 
   if (!response.ok) {
